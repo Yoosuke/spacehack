@@ -1,6 +1,13 @@
 defmodule Jaxa do
   def get(dataset_id, start_time, end_time, latlng, header \\ []) do
     path = "https://gportal.jaxa.jp/csw?/csw/csw?service=CSW&version=3.0.0&request=GetRecords&outputFormat=application/json&"
+    path <> dataset_id <> "&startTime=" <> start_time <>  "&endTime=" <> end_time <> "&box=" <> latlng
+		|> HTTPoison.get!( header )
+		|> parse
+  end
+
+  def id_get(dataset_id, start_time, end_time, latlng, header \\ []) do
+    path = "https://gportal.jaxa.jp/csw?/csw/csw?service=CSW&version=3.0.0&request=GetRecords&outputFormat=application/json&"
     path <> dataset_id <> "&startTime=" <> start_time <> "T00:00:00Z" <> "&endTime=" <> end_time <> "T23:59:59Z" <> "&box=" <> latlng
 		|> HTTPoison.get!( header )
 		|> parse

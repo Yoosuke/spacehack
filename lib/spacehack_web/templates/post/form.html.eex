@@ -9,13 +9,9 @@
   <%= text_input f, :title %>
   <%= error_tag f, :title %>
 
-  <%= label f, :b %>
+  <%= label f, "グラニュールID" %>
   <%= text_input f, :b %>
   <%= error_tag f, :b %>
-
-  <%= label f, :body %>
-  <%= textarea f, :body %>
-  <%= error_tag f, :body %>
 
   <%= label f, :lat %>
   <%= number_input f, :lat, step: "any" %>
@@ -25,17 +21,17 @@
   <%= number_input f, :lng, step: "any" %>
   <%= error_tag f, :lng %>
 
-  <%= label f, :url %>
-  <%= text_input f, :url %>
-  <%= error_tag f, :url %>
+  <%=# label f, :url %>
+  <%=# text_input f, :url %>
+  <%=# error_tag f, :url %>
 
-  <%= label f, :date %>
-  <%= date_select f, :date %>
-  <%= error_tag f, :date %>
+  <%=# label f, :date %>
+  <%=# date_select f, :date %>
+  <%=# error_tag f, :date %>
 
-  <%= label f, :data %>
-  <%= text_input f, :data %>
-  <%= error_tag f, :data %>
+  <%=# label f, :data %>
+  <%=# text_input f, :data %>
+  <%=# error_tag f, :data %>
 
   <div>
     <%= submit "Save" %>

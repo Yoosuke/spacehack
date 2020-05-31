@@ -1,17 +1,32 @@
 <% 
-#dataset_id = ""
-#latlng = Float.to_string(@post.lat) <> "," <> Float.to_string(@post.lng)
+dataset_id = "10002017"
+# latlng = Float.to_string(@post.lat) <> "," <> Float.to_string(@post.lng)
 # Jaxa.get(dataset_id, @post.date, @post.date, latlng)
-json = Jaxa.gid_get(@post.b)
-[head | tail] = json["features"]
-list =  head["properties"]["browse"] 
+# json = Jaxa.gid_get(@post.b)
+# [head | tail] = json["features"]
+# list =  head["properties"]["browse"] 
+ string_date = Date.to_string(@post.date)
 
+[ a , b ] = Float.to_string(@post.lat) |> String.split(".")
+lat = a <> "," <> String.slice(b, 0, 2)
+
+[ c , d ] = Float.to_string(@post.lng) |> String.split(".")
+lng = c <> "," <> String.slice(d, 0, 2)
+
+latlon = lat <> "," <> lng
+
+json2 = Json.get("https://gportal.jaxa.jp", "/csw/csw?service=CSW&version=3.0.0&request=GetRecords&outputFormat=application/json&datasetId=#{dataset_id}&startTime=#{string_date}T00:00:00Z&endTime=#{string_date}T23:59:59Z&box=#{latlon}")
+[head | tail] = json2["features"]
+[head2 | tail] = tail
+list =  head["properties"]["browse"] 
+list2 = head2["properties"]["browse"]
 
 %> 
 
 <section class="phx-hero" >
 <h1><%= @post.title %></h1>
 <h2>データ：<%= @post.data %></h2>
+<%= lat %>, <%= lng %>
 <p>データ取得日：<%= Date.to_string(@post.date) |> String.replace("-", "/") %></p>
 </section>
 
@@ -33,7 +48,7 @@ list =  head["properties"]["browse"]
 <div id='map' style='width: 100%; height: 500px;'></div>
 
 <script>
-	mapboxgl.accessToken = '<%= mapbox %>';
+mapboxgl.accessToken = '<%= mapbox %>';
 var map = new mapboxgl.Map({
 container: 'map',
 style: 'mapbox://styles/yosukenakao/ckaufzgex2iob1ipcmd7apuyt',
@@ -48,10 +63,13 @@ zoom: 8
 </script>
 
 <%= for item <- list do %>
-
-<img src="<%= Map.get(item, "fileName") %>" />
-
+<img src="<%= Map.get(item, "fileName") %>" style="width: 370px;"/>
 <% end %>
 
-<span><%= link "Edit", to: Routes.post_path(@conn, :edit, @post) %></span>
-<span><%= link "Back", to: Routes.post_path(@conn, :index) %></span>
+<%= for item <- list2 do %>
+<img src="<%= Map.get(item, "fileName") %>" style="width: 370px;"/>
+<% end %>
+
+
+<span><i class="material-icons" style="vertical-align: bottom"><%= link "edit", to: Routes.post_path(@conn, :edit, @post), class: "yellow-link" %></i></span>
+<span><%= link "Back", to: Routes.post_path(@conn, :index), class: "yellow-link" %></span>
