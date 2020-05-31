@@ -1,4 +1,4 @@
-defmodule SpacehackWeb.PageView do
+defmodule SpacehackWeb.PostView do
   use SpacehackWeb, :view
 
   def parse_markdown(markdown) do

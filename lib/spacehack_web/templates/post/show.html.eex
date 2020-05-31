@@ -1,0 +1,57 @@
+<% 
+#dataset_id = ""
+#latlng = Float.to_string(@post.lat) <> "," <> Float.to_string(@post.lng)
+# Jaxa.get(dataset_id, @post.date, @post.date, latlng)
+json = Jaxa.gid_get(@post.b)
+[head | tail] = json["features"]
+list =  head["properties"]["browse"] 
+
+
+%> 
+
+<section class="phx-hero" >
+<h1><%= @post.title %></h1>
+<h2>データ：<%= @post.data %></h2>
+<p>データ取得日：<%= Date.to_string(@post.date) |> String.replace("-", "/") %></p>
+</section>
+
+  <style>
+    #marker {
+        background-image: url('../static/images/kobit.png');
+        background-size: cover;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+    .mapboxgl-popup {
+        max-width: 200px;
+    }
+  </style>
+
+
+<div id='map' style='width: 100%; height: 500px;'></div>
+
+<script>
+	mapboxgl.accessToken = '<%= mapbox %>';
+var map = new mapboxgl.Map({
+container: 'map',
+style: 'mapbox://styles/yosukenakao/ckaufzgex2iob1ipcmd7apuyt',
+center: [<%= @post.lat %>, <%= @post.lng %>],
+zoom: 8
+});
+ 
+  var marker = new mapboxgl.Marker()
+  .setLngLat([<%= @post.lat %>, <%= @post.lng %>])
+  .addTo(map);
+
+</script>
+
+<%= for item <- list do %>
+
+<img src="<%= Map.get(item, "fileName") %>" />
+
+<% end %>
+
+<span><%= link "Edit", to: Routes.post_path(@conn, :edit, @post) %></span>
+<span><%= link "Back", to: Routes.post_path(@conn, :index) %></span>
